@@ -200,7 +200,7 @@ fn main() {
     let mut driver = Driver::new();
     driver.add_pattern(Rainbow::new());
     driver.add_pattern(Spiral::new());
-    driver.add_pattern(Spin::new());
     driver.add_pattern(Rows::new());
+    driver.add_pattern(Spin::new());
     driver.run();
 }
