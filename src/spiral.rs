@@ -21,10 +21,9 @@ impl Pattern for Spiral {
         self.update(0.0, 0.0);
     }
 
-    fn update(&mut self, t: f32, dt: f32) -> bool {
-        let time = t as f64;
-        let t = 8.0 as f64;
-        let c = (100.0 / (t / 2.0)) as f64;
+    fn update(&mut self, time: f64, dt: f64) -> bool {
+        let t = 8.0f64;
+        let c = 100.0 / (t / 2.0);
 
         for lid in 0..self.strip.count() {
             let state = if time < (t / 2.0) {

@@ -15,7 +15,7 @@ use crate::spiral::Spiral;
 pub trait Pattern {
     fn init(&mut self);
 
-    fn update(&mut self, time: f32, dt: f32) -> bool;
+    fn update(&mut self, time: f64, dt: f64) -> bool;
 
     fn strip(&mut self) -> &Strip;
 }
@@ -27,6 +27,26 @@ pub struct Led {
     pub b: u8,
 }
 
+impl Led {
+    pub fn mul(&self, by: f64) -> Led {
+        Led {
+            r: (self.r as f64 * by) as u8,
+            g: (self.g as f64 * by) as u8,
+            b: (self.b as f64 * by) as u8
+        }
+    }
+}
+
+impl From<HSL> for Led {
+    fn from(hsl: HSL) -> Self {
+        let vals = hsl.to_rgb();
+        Led {
+            r: vals.0,
+            g: vals.1,
+            b: vals.2,
+        }
+    }
+}
 
 #[derive(Clone)]
 pub struct Strip {
@@ -121,8 +141,8 @@ impl Driver {
                 let mut con = true;
                 while con {
                     let now = Instant::now();
-                    let t = now.duration_since(start_time).as_secs_f32();
-                    let dt = now.duration_since(last_run).as_secs_f32();
+                    let t = now.duration_since(start_time).as_secs_f64();
+                    let dt = now.duration_since(last_run).as_secs_f64();
                     last_run = now;
 
                     con = pattern.update(t, dt);

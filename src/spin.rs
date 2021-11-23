@@ -25,20 +25,6 @@ const ROWS: [[u32; 3]; 9] = [
     [98, 99, 1],
 ];
 
-const FLIPS: [bool; 9] = [
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-];
-
-const CR: usize = 2;
-
 
 impl Pattern for Spin {
     fn init(&mut self) {
@@ -46,58 +32,20 @@ impl Pattern for Spin {
         self.update(0.0, 0.0);
     }
 
-    fn update(&mut self, time: f32, dt: f32) -> bool {
-
-        // time.floor() as usize
-
-        let v = (time).floor() as usize;
-
+    fn update(&mut self, time: f64, dt: f64) -> bool {
         for r in 0..ROWS.len() {
             let row = ROWS[r];
             let from = row[0];
             let to = row[1] + 1;
-
             let range = to - from;
-
-            // let state =  ((v >> r) & 1) == 1;
-
 
             for lid in from..to {
                 let i = lid - from;
-
-                // let mut val = ((((i + row[2]) % range) as f64) / (range as f64));
-                // if FLIPS[r] {
-                //     val = 1.0 - val;
-                // }
-
-                // let val = if FLIPS[r] {
-                //     ((((range + row[2] - i) % range) as f64) / (range as f64))
-                // } else {
-                //     ((((i + row[2]) % range) as f64) / (range as f64))
-                // };
-
-                let hr = range / 2;
-
-                let fi = if FLIPS[r] { range - 1 - i } else { i };
-                let cent = if FLIPS[r] { range - 1 - row[2] } else { row[2] };
-
-                let mut val = ((((range + fi + cent - hr) % range) as f64) / (range as f64));
-                // if FLIPS[r] {
-                //     val = 1.0 - val;
-                // }
-
-                //FLIPS
-                // let state = val <= 0.25;
-                // let state = true;
-
                 let ni = (range + i - row[2]) % range;
                 let val = ni as f64 / range as f64;
-                // let state = val >= 0.25 && val <= 0.5;
-
-                // let
 
                 let current = val - 0.5;
-                let target = ((time as f64 / 1.0) % 1.0) - 0.5;
+                let target = ((time / 1.0) % 1.0) - 0.5;
 
                 let mut diff = target - current;
                 if diff < -0.5 {
@@ -111,70 +59,15 @@ impl Pattern for Spin {
 
                 let d = ( (1.0 - diff) - 0.75).max(0.0) / 0.25;
 
-                // let d1 = val - target;
-
-                // let mut diff = val - (time as f64 % 1.0);
-
-                // diff /= 10.0;
-                // if diff < 0.0 {
-                //     diff = 1.0 -diff;
-                // }
-
-                // self.strip.set(lid, Led {
-                //     r: (255 as f64 * d) as u8,
-                //     g: 0,
-                //     b: 0
-                //     // g: if r == CR { 255 } else { 0 },
-                //     // b: if r == CR { 255 } else { 0 },
-                // });
-
-                let rgb = HSL {
-                    h: (d * 100.0 + (time * 10.0) as f64) % 360.0,
+                self.strip.set(lid, Led::from(HSL {
+                    h: (d * 100.0 + time * 10.0) % 360.0,
                     s: 1.0,
                     l: 0.5,
-                }.to_rgb();
-
-
-                // let mut l = ( (1.0 - diff) - 0.5).max(0.0) / 0.5;
-                // l = 1.0;
-                let l = (1.0 - diff);
-
-                self.strip.set(lid, Led {
-                    r: (rgb.0 as f64 * (l)) as u8,
-                    g: (rgb.1 as f64 * (l)) as u8,
-                    b: (rgb.2 as f64 * (l)) as u8
-                });
-
-
-                // let state = ni <= range / 4;
-
-                // if state /*&& r <= CR*/ {
-                //     // self.strip.set_hsl(lid, HSL {
-                //     //     h: (((i as f64) / (range as f64)) * 360.0 * 0.5 + (time * 100.0) as f64) % 360.0,
-                //     //     s: 1.0,
-                //     //     l: 0.5,
-                //     // });
-                //     self.strip.set(lid, Led {
-                //         r: 100,
-                //         // g: 0,
-                //         // b: 0
-                //         g: if r == CR { 255 } else { 0 },
-                //         b: if r == CR { 255 } else { 0 },
-                //     });
-                // } else {
-                //     self.strip.set(lid, Led {
-                //         r: 0,
-                //         g: 0,
-                //         b: 0,
-                //     });
-                // }
+                }).mul(1.0 - diff));
             }
         }
 
-        // let row = ROWS[ ((time * 10.0).floor() as usize) % ROWS.len()];
-
         time < 8.0
-        // true
     }
 
     fn strip(&mut self) -> &Strip {

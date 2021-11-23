@@ -31,7 +31,7 @@ impl Pattern for Rows {
         self.update(0.0, 0.0);
     }
 
-    fn update(&mut self, time: f32, dt: f32) -> bool {
+    fn update(&mut self, time: f64, dt: f64) -> bool {
 
         // time.floor() as usize
 
@@ -45,7 +45,7 @@ impl Pattern for Rows {
 
             if state {
                 self.strip.set_hsl(lid, HSL {
-                    h: (time as f64 * 100.0) % 360.0,
+                    h: (time * 100.0) % 360.0,
                     s: 1.0,
                     l: 0.5,
                 });

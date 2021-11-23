@@ -19,16 +19,16 @@ impl Pattern for Rainbow {
         self.update(0.0, 0.0);
     }
 
-    fn update(&mut self, time: f32, dt: f32) -> bool {
+    fn update(&mut self, time: f64, dt: f64) -> bool {
         for lid in 0..self.strip.count() {
             self.strip.set_hsl(lid, HSL {
-                h: (((time * 100.0) as f64 + (lid as f64 * 2.0)) % 360.0) as f64,
+                h: (time * 100.0 + (lid as f64 * 2.0)) % 360.0,
                 s: 1.0,
                 l: 0.5,
             });
         }
 
-        time < 8.0
+        time < 16.0
     }
 
     fn strip(&mut self) -> &Strip {
