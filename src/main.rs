@@ -2,11 +2,13 @@ mod rainbow;
 mod spiral;
 mod spin;
 mod rows;
+mod twinkle;
 
 use std::{env, thread};
 use rs_ws281x::{ChannelBuilder, Controller, ControllerBuilder, StripType};
 use std::time::{Duration, Instant};
 use hsl::HSL;
+use crate::twinkle::Twinkle;
 use crate::rainbow::Rainbow;
 use crate::rows::Rows;
 use crate::spin::Spin;
